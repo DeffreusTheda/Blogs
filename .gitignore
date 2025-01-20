@@ -1,0 +1,15 @@
+public
+resources
+assets/jsconfig.json
+.hugo_build.lock
+.obsidian
+app.json
+appearance.json
+community-plugins.json
+core-plugins.json
+hotkeys.json
+plugins
+templates.json
+workspace.json
+themes/*
+!themes/hugo-theme-stack/
