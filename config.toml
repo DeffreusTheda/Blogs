@@ -25,7 +25,9 @@ favicon = "favicon.ico"
   [params.sidebar]
   compact = false
   # emoji = "；"
-  subtitle = "\"We're all in this alone\""
+  # subtitle = "\"His heart was yours from the first moment that you met.\""
+  # subtitle = I love you, not only for what you are, but for what I am when I am with you.
+  subtitle = "Let us live!!! Let us love!!! Let us share the deepest secrets of our souls!!! You first."
 
     [params.sidebar.avatar]
     enabled = true
