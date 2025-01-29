@@ -266,7 +266,7 @@ demn, look the size of this executable
 
 I used DotPeekTM in my Windows 11 VM to decompile it… Here’s the full result:
 
-{{< highlight c# >}}
+{{< highlight csharp >}}
  // Decompiled with JetBrains decompiler
  // Type: Program
  // Assembly: wleee, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
