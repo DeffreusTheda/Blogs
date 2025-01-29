@@ -224,7 +224,7 @@ A quite interesting byte swap method, I guess. Then, it just XOR the bytes with 
 
 #### Solver
 
-{{< highlight c >}}
+{{< highlight py >}}
  enc = [0, 24, 59, 86, 2, 14, 43, 17, 17, 24, 0, 54, 7, 46, 49, 11, 1, 11, 16, 10, 1, 0, 53, 58, 0, 0, 18, 18, 1, 53, 90, 57]
  key = "SerikatNewbieIndonesia"
  shu = []
@@ -266,7 +266,7 @@ demn, look the size of this executable
 
 I used DotPeekTM in my Windows 11 VM to decompile it… Here’s the full result:
 
-{{< highlight c >}}
+{{< highlight cs >}}
  // Decompiled with JetBrains decompiler
  // Type: Program
  // Assembly: wleee, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -373,7 +373,7 @@ So, I just brute forced it. There’s only 100 printable characters, and if you 
 
 #### Solver
 
-{{< highlight c >}}
+{{< highlight py >}}
 import string
 
 c1 = [
@@ -474,17 +474,16 @@ For this particular `/0`, it writes that byte to `DAT_004a3b2c`. I jump into tha
   
 And ends at `DAT_004a3b2f`. See, 0x2f - 0x10 is equal to 31, so this REAALLY seems like where these `/` prefix functions. Except that `/0` write to NOT the first index in this array. If I order from `/0` to `/31` where it write their address, it’ll be
 
-{{< highlight c >}}
-File: orderofwrite
- DAT_004a3b2c
- DAT_004a3b19
- DAT_004a3b29
- DAT_004a3b14
- DAT_004a3b28
- DAT_004a3b24
- DAT_004a3b21
- DAT_004a3b2d
- DAT_004a3b2f
+{{< highlight text >}}
+DAT_004a3b2c
+DAT_004a3b19
+DAT_004a3b29
+DAT_004a3b14
+DAT_004a3b28
+DAT_004a3b24
+DAT_004a3b21
+DAT_004a3b2d
+DAT_004a3b2f
 DAT_004a3b1c
 DAT_004a3b1e
 DAT_004a3b1b
@@ -513,7 +512,7 @@ DAT_004a3b20
 
 What do we get from this? So, in short, the program writes input bytes in a ‘random’ order. Basically, like a substitution table, or a map, uh honestly I don’t know what to call it. We can `reverse` this with a `reverse` map, that we can generate with
 
-{{< highlight c >}}
+{{< highlight py >}}
  with open('orderofwrite', 'r') as f:
      idx = 0
      for line in f:
@@ -525,16 +524,16 @@ What do we get from this? So, in short, the program writes input bytes in a ‘r
 
 Which will output
 
-{{< highlight c >}}
- map[28] = 0
- map[09] = 1
- map[25] = 2
- map[04] = 3
- map[24] = 4
- map[20] = 5
- map[17] = 6
- map[29] = 7
- map[31] = 8
+{{< highlight py >}}
+map[28] = 0
+map[09] = 1
+map[25] = 2
+map[04] = 3
+map[24] = 4
+map[20] = 5
+map[17] = 6
+map[29] = 7
+map[31] = 8
 map[12] = 9
 map[14] = 10
 map[11] = 11
@@ -589,16 +588,16 @@ When I made the solver, I noticed that it failed, even if it should be successfu
   
 Lemme tell you this: the same solution for `_pusing` (i.e. bruteforce) also applies to these two, AND they have similar parameter definition, so you only really need to change what you call. The checker function called for character N are
 
-{{< highlight c >}}
- _pusing
- _pusing
- _charcoal
- _grrr
- _charcoal
- _charcoal
- _charcoal
- _charcoal
- _grrr
+{{< highlight text >}}
+_pusing
+_pusing
+_charcoal
+_grrr
+_charcoal
+_charcoal
+_charcoal
+_charcoal
+_grrr
 _grrr
 _pusing
 _grrr
@@ -878,7 +877,7 @@ Anyway, how to reverse the second phase? Dunno, I just do it like
 
 We get `out.txt` and it contains
 
-{{< highlight c >}}
+{{< highlight text >}}
 result: 8f6c54103d16682e98ca66d8b1bb67a0007d57e166d719f12fcd2ca1884454aa
 {{< /highlight >}}
 
@@ -1121,7 +1120,7 @@ You know what?! They’ve been 80%-hardcore doing CP, FROM THEIR FIRST YEAR. ONE
 
 #### Solver
 
-{{< highlight c >}}
+{{< highlight py >}}
  def solve_bengsky(N, M, prices):
      # Convert prices to tuples with original indices to maintain order
      prices_with_index = [(p, i) for i, p in enumerate(prices)]
@@ -1199,7 +1198,7 @@ Maaf kak agoyy T-T, tapi inilah kenyataannya (saya jujur juga kecewa)
 ![](image38.png)
 
 
-{{< highlight c >}}
+{{< highlight py >}}
  def minimal_deduction(f1, f2):
      """Calculate minimal point deduction for formation transition."""
      INSERT, DELETE, SUBSTITUTE = 11, 7, 15
@@ -1274,7 +1273,7 @@ Welcome to the gateway to the world of Python weirdness.
 
 #### Is the letter okay?
 
-{{< highlight c >}}
+{{< highlight py >}}
  #!/usr/bin/env python3
  
  from secret import flag
@@ -1324,16 +1323,16 @@ I just go to Python builtins documentation and searching for functions that retu
 
 #### Solver
 
-{{< highlight c >}}
- import string
- from pwn import *
- 
- context.log_level = "CRITICAL"
- 
- flag = [0 for i in range(921)]
- 
- for a in string.printable:
-     start = 0
+{{< highlight py >}}
+import string
+from pwn import *
+
+context.log_level = "CRITICAL"
+
+flag = [0 for i in range(921)]
+
+for a in string.printable:
+    start = 0
     sick = True
     # print("INDEXING", a)
     while sick:
@@ -1374,16 +1373,16 @@ Something weird in my RSA!
 
 #### Encryption
 
-{{< highlight c >}}
- from Crypto.Util.number import *
- import os
- 
- flag = open("flag.txt", "rb").read() 
- flag += os.urandom(130-len(flag))
- 
- m = bytes_to_long(flag)
- p,q = getPrime(512), getPrime(512)
- n = p*q
+{{< highlight py >}}
+from Crypto.Util.number import *
+import os
+
+flag = open("flag.txt", "rb").read() 
+flag += os.urandom(130-len(flag))
+
+m = bytes_to_long(flag)
+p,q = getPrime(512), getPrime(512)
+n = p*q
 e = 65537
 d = inverse(e,(p-1)*(q-1))
 c = pow(m,d,n)
@@ -1398,16 +1397,16 @@ This is just an intro/warmup chall, I felt like. I can just brute force the mult
 
 #### Decryption
 
-{{< highlight c >}}
- from Crypto.Util.number import long_to_bytes
- import string
- 
- n = 110223867746640965637669407552200539300404951940768922626582126620277066812791667641777082687154314924063023851590405173123594044684465359525968546353220060077378235806055903644738787114955134145583027933486021793899403480011282191691500982373555555656504653560686754735448569923801597654019701001782484065071
- e = 65537
- c = 101650847822923866634342729608400565998505884084276942969417606985521641681029353145045350584846972739992534688286585744643195719775872682045707770452738645334803464930727255506592812075527569723183312927425192465942290775111371647005607833363470384342180049453831084341449156409625358355424770931826856361541
- 
- m1 = pow(c, e, n)
- k = 1
+{{< highlight py >}}
+from Crypto.Util.number import long_to_bytes
+import string
+
+n = 110223867746640965637669407552200539300404951940768922626582126620277066812791667641777082687154314924063023851590405173123594044684465359525968546353220060077378235806055903644738787114955134145583027933486021793899403480011282191691500982373555555656504653560686754735448569923801597654019701001782484065071
+e = 65537
+c = 101650847822923866634342729608400565998505884084276942969417606985521641681029353145045350584846972739992534688286585744643195719775872682045707770452738645334803464930727255506592812075527569723183312927425192465942290775111371647005607833363470384342180049453831084341449156409625358355424770931826856361541
+
+m1 = pow(c, e, n)
+k = 1
 
 while True:
     guess = long_to_bytes(m1 + k * n)
@@ -1450,16 +1449,16 @@ Our goal is to submitSecret() with the correct secret value, as there, it’s re
 ![](image44.png)
 
 
-{{< highlight c >}}
- // SPDX-License-Identifier: MIT
- pragma solidity ^0.8.0;
+{{< highlight sol >}}
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MizuharaSecret {
+    bool public solved;
+
+    mapping(uint256 => uint256[]) private secret;
  
- contract MizuharaSecret {
-     bool public solved;
- 
-     mapping(uint256 => uint256[]) private secret;
- 
-     constructor() {
+    constructor() {
         secret[1337] = [
             0x5245444143544544 // REDACTED
         ];
@@ -1481,7 +1480,7 @@ Our goal is to submitSecret() with the correct secret value, as there, it’s re
 {{< /highlight >}}
 
 
-{{< highlight c >}}
+{{< highlight bash >}}
 #!/bin/bash
 set -x
 
