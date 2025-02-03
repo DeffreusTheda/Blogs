@@ -14,3 +14,4 @@ workspace.json
 themes/*
 !themes/hugo-theme-stack/
 **/.DS_Store
+.vercel
