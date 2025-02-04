@@ -2,6 +2,8 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 
 <!-- Add Vercel Speed Insight to Hugo!! -->
+<script defer src="/_vercel/insights/script.js"></script>
+<!-- Whicever works :/ -->
 {{ $speedInsights := resources.Get "js/speedInsights.js" }}
 <script type="module" src="{{ $speedInsights.RelPermalink }}"></script>
 

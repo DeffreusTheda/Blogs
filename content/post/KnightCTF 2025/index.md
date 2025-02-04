@@ -112,6 +112,8 @@ Ghidra ftw :3
 ![](cyberchef.png)
 
 Flag: **KCTF{_W4s_i7_e4sY?_}**
+<!--ID: 1738283512871-->
+
 
 ### Knight's Droid
 
@@ -198,6 +200,8 @@ and tadaa!!
 There's the flag! ^\-^
 
 Flag: **KCTF{_congrat5_KNIGHT_y0u_g0t_yOuR_Kn1gh7_dR01d_}**
+<!--ID: 1738283512872-->
+
 
 ### Easy Path to the Grail
 
@@ -297,6 +301,8 @@ for cc in c:
 Yayy!!
 
 Flag: **KCTF{e4sy_p3asY_r3v_ch4ll3nge}**
+<!--ID: 1738283512873-->
+
 
 ### Worthy Knight
 
@@ -545,6 +551,8 @@ There's the flag!
 ![](worthy.png)
 
 Flag: **KCTF{NjkSfTYaIi}**
+<!--ID: 1738283512874-->
+
 
 ### Knight's Enigma
 
@@ -737,3 +745,4 @@ Seeing the flag get constructed one byte at a time is quite a sight to behold :>
 ![](enigma.png)
 
 Flag: **KCTF{_c0ngrat5_knight_y0u_g0t_1t_}**
+<!--ID: 1738283512875-->

@@ -45,8 +45,8 @@ We’re given flagchecker, a python compiled bytecode containing xor-index encry
 
 I don’t have pycdc installed! D: I ~~wasted~~ spent minutes trying to install it. Silly me, I still can’t differentiate cmake and make. When I got it compiled, pycdc can’t fully decompile it, DUH. And oh well you know what, an online decompiler does it better, so maybe you can watch out for that possibility too next time :\>  
 
-![](image2.png)
-  
+![](image2.png)  
+
 So, this script takes the flag input to be checked, then decrypts and runs the marshal code inside it that is responsible for the flag checking logic. See there! The bytes are XOR’ed with its index, and this is easily reversible. ;) We can just decrypt it by doing the exact same operation, and that’s XOR cipher for you.  
 
 You can see on line 10, the current `__file__` is read, skipping 676 bytes belonging to this small script, essentially reading the marshal object code. Now that we know where they part, use the code to output the marshal code into a file, checker.pyc:
@@ -134,15 +134,15 @@ Effie: Well, kinda, (I don’t even know who Alya is). Everytime you click, pres
 Late to mention, but this challenge gives us the server code:
 
 {{< highlight js >}}
- const express = require('express');
- const app = express();
- const http = require('http').createServer(app)
- const sqlite3 = require('sqlite3').verbose();
- const db = new sqlite3.Database('scores.db');
- const io = require('socket.io')(http, {
-     cors: {
-         origin: '*',
-         methods: ['GET', 'POST'],
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app)
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('scores.db');
+const io = require('socket.io')(http, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
         credentials: true,
         transports: ['websocket', 'polling'],
     },
