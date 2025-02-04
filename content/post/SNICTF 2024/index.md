@@ -7,7 +7,9 @@ description: My best time soloing any CTF
 categories:
   - Write-up
 tags:
-  - SNICTF 2024
+  - National
+  - High School
+  - Individual
 ---
 
 ## Serikat Newbie Indonesia's Capture the Flag 2024
@@ -37,7 +39,7 @@ Jangan lupa flagnya nanti diwrapped dengan `SNI{}`
 
 Got `quotes_of_the_day.png: PNG image data, 808530225 x 808529968, 32-bit`, then I tried strings on it:  
 
-![](image2.png)
+![](content/post/SNICTF%202024/image2.png)
   
 That strings looks reverse, so I tried ran `cat 'quotes_of_the_day.png' | rev >quotes_of_the_day_reversed.png` but it failed. So I just `strings quotes_of_the_day.png | rev >strings-rev` it and `cat strings-rev`:
 
@@ -56,6 +58,8 @@ That’s three parts of the flag found!
 
 **Flag: SNI{jika_seseorang_bercerita_tentang_buruknya_diriku_kabari_aku_siapa_tau_ceritanya_kurang_lengkap_e35983a5738e}**  
 **Rating [4/10]**  
+<!--ID: 1738283512841-->
+
 
 ## REVERSE ENGINEERING
 
@@ -254,6 +258,8 @@ for w in shu:
 
 **FLAG: SNI{is_it_baby_enough_for_you??}**  
 **Rating [5/10]**  
+<!--ID: 1738283512844-->
+
 
 Just a baby chall, nothing to say. Maybe,
 
@@ -298,6 +304,8 @@ internal class Program {
     }
     return (Program.Checker) (() => correct_number == flag.Length);
   }
+<!--ID: 1738283512845-->
+
 
   private static Program.Checker checker2(string flag) {
     int correct_number = 0;
@@ -320,6 +328,8 @@ internal class Program {
     }
     return (Program.Checker) (() => correct_number == flag.Length);
   }
+<!--ID: 1738283512846-->
+
 
   private static Program.Checker checker3(string flag) {
     int correct_number = 0;
@@ -336,6 +346,8 @@ internal class Program {
     }
     return (Program.Checker) (() => correct_number == flag.Length);
   }
+<!--ID: 1738283512847-->
+
 
   private static void Main() {
     Program.CheckerCallback[] checkerCallbackArray = new Program.CheckerCallback[3] {
@@ -413,6 +425,8 @@ for idx in range(42):
 
 **Flag: SNI{C\#_dotnet_s1ngL3_f1l3_1s_S0ooo0_b\!ggG}**  
 **Rating [6/10]**  
+<!--ID: 1738283512848-->
+
 
 T-T T-T T-T my window VM literally broke one day before the CTF started. I tried 3 different hypervisors like UTM & VMWare & then Parallels Desktop, installed Windows 1-by-1 and dotpeek took a katabasis to hell before I- **continue ranting-*  
 This is WAY easier than BabyRev, I don’t know why people solve it less…
@@ -520,6 +534,8 @@ What do we get from this? So, in short, the program writes input bytes in a ‘r
          print(f'map[{wto:#02d}] = {idx}')
          idx += 1
 {{< /highlight >}}
+<!--ID: 1738283512849-->
+
 
 
 Which will output
@@ -696,6 +712,8 @@ char _charcoal(char param_1,char param_2) {
 char target[] = {0x47, 0x7f, 0xe9, 0xbf, 0x87, 0xfb, 0x53, 0xc3, 0x83, 0xe6, 0xf7, 0xde, 0xc6, 0x4c, 0xa8, 0x3f, 0x2b, 0x6e, 0xb0, 0xcc, 0x1a, 0xbb, 0xc3, 0xef, 0x9a, 0x3e, 0x77, 0xaa, 0x05, 0xc1, 0x5c, 0xef};
 char key[] = {0xe0, 0x10, 0x35, 0xa0, 0x65, 0xdf, 0x57, 0x1d, 0xef, 0x68, 0x95, 0x96, 0x9d, 0x17, 0xb9, 0xcd, 0xae, 0x08, 0xbf, 0x2b, 0x9d, 0x49, 0x1d, 0x75, 0xd5, 0xf5, 0x05, 0x7d, 0xb2, 0x4c, 0xe9, 0x7c};
 func_ptr func_array[] = {_pusing, _pusing, _charcoal, _grrr, _charcoal, _charcoal, _charcoal, _charcoal, _grrr, _grrr, _pusing, _grrr, _grrr, _grrr, _grrr, _pusing, _pusing, _pusing, _grrr, _charcoal, _charcoal, _pusing, _charcoal, _grrr, _grrr, _pusing, _pusing, _charcoal, _pusing, _pusing, _pusing, _pusing};
+<!--ID: 1738283512850-->
+
 
 func_ptr func(size_t idx) {
   return func_array[idx];
@@ -758,6 +776,8 @@ int main() {
 
 **Flag: SNI{obfuscated_code_goes_brrrrr}**  
 **Rating [8/10]**  
+<!--ID: 1738283512851-->
+
 
 This chall is so tedious omg i have to rename A TON of things and the key/mouse press needed per rename is 💀 (ghidra bilek). Yeah, it’s kinda clever I guess, anti-reversing through redundancies (idk what to call it), wkwkwkw. Funny chall. I first-blooded it btw (sole solver wkwkwk).
 
@@ -836,6 +856,8 @@ Shorter than I expected… there’s two `do` loops there, so 2 phases of encryp
         }
     }
 {{< /highlight >}}
+<!--ID: 1738283512852-->
+
 
 
 If we multiply a byte multiplied by 0x79 with the multiplicative inverse of 0x79, we’ll get the byte back! XOR is XOR, and you can just XOR XOR-ed byte with the same XOR key to get back the un-XOR-ed byte XD.
@@ -1042,6 +1064,8 @@ void main(void) {
     encrypt(encrypted, len, &key, key_len);
     memcpy(decrypted, encrypted, len);
     decrypt(decrypted, len, &key, key_len, 153);
+<!--ID: 1738283512853-->
+
 
     printf("\nOn the real one now...\n\n");
 
@@ -1061,6 +1085,8 @@ void main(void) {
     return 0;
 }
 {{< /highlight >}}
+<!--ID: 1738283512854-->
+
 
 
 
@@ -1070,8 +1096,12 @@ void main(void) {
 
 **Flag: SNI{K0k_B1sA_K3ren_G1Tu_bAnh???}**  
 **Rating [10/10]**  
+<!--ID: 1738283512855-->
+
 
 HARD AF, as expected from this nice FlaBBB man. Took me HOURS T-T to solve. First blood though, cool. Feedback: flag should be SNI{K0k\_B1sA\_K3ren\_G1Tu\_mb4k???}.  
+<!--ID: 1738283512856-->
+
 
 ![](image32.png)
 
@@ -1099,6 +1129,8 @@ Wow, that’s the flag… This is not even OSINT T-T
 
 **Flag: SNI{Trick0rTreat_TheFlagIsInTheLab👻}**  
 **Rating [Soceng/10]**  
+<!--ID: 1738283512857-->
+
 
 ## PROGRAMMING
 
@@ -1107,6 +1139,8 @@ Wow, that’s the flag… This is not even OSINT T-T
 Buat program sesuai dengan deskripsi soal dan masukkan testcase input ke program kalian.
 
 Flag: SNI{hex(sha256(output))}
+<!--ID: 1738283512858-->
+
 
 ###### Author: agoyy
 
@@ -1180,14 +1214,20 @@ print(" ".join(map(str, result)))
 
 **Flag: SNI{55e7e87ba720040b6ac8264ad340b61cf936b5e2f91f4651acd7cef752a3f3a6}**  
 **Rating [AI/10]**  
+<!--ID: 1738283512859-->
+
 
 ### [408] Lomba Rusa [13 Solves]
 
 Buat program sesuai dengan deskripsi soal dan masukkan testcase input ke program kalian.
 
 Flag: SNI{hex(output)}
+<!--ID: 1738283512860-->
+
 
 Contoh: SNI{deadbeef}, SNI{7}
+<!--ID: 1738283512861-->
+
 
 ###### Author: agoyy
 
@@ -1262,6 +1302,8 @@ if __name__ == "__main__":
 
 **Flag: SNI{47bbf3d}**  
 **Rating [AI/10]**  
+<!--ID: 1738283512862-->
+
 
 ## JAIL
 
@@ -1348,6 +1390,8 @@ for a in string.printable:
         else:
             sick = False
         c.close()
+<!--ID: 1738283512863-->
+
 
 for c in flag:
     print(ord(c), end='')
@@ -1362,6 +1406,8 @@ for c in flag:
 
 **Flag: SNI{one_day_i_reincarnated_as_a_ctf_player_with_a_mission_to_conquer_all_the_challenges_before_me_everything_was_fine_until_i_encountered_a_mysterious_python_challenge_that_raised_the_ultimate_question_is_python_even_a_real_language_as_a_tech_enthusiast_i_thought_python_was_my_safe_haven_familiar_and_friendly_but_pyjail_changed_everything_the_more_i_explored_it_the_more_it_felt_like_i_was_trapped_in_a_twisted_game_where_normal_python_rules_didnt_apply_functions_i_once_trusted_betrayed_me_globals_i_needed_disappeared_it_felt_like_i_was_wrestling_with_an_obscure_beast_that_lurks_in_the_dark_corners_of_python_surely_this_cant_be_happening_i_questioned_was_this_even_programming_anymore_or_a_mind_bending_puzzle_beyond_my_comprehension_it_was_as_if_logic_bent_to_the_whims_of_some_cruel_pyjail_overlord_restricting_my_every_move_and_taunting_me_with_imports_i_couldnt_use_yet_i_persisted_because_in_ctf_we_never_quit}**  
 **Rating [7/10]**  
+<!--ID: 1738283512864-->
+
 
 ## CRYPTO
 
@@ -1420,6 +1466,8 @@ while True:
         print( f'{flag.decode('utf-8')}' )
         break
 {{< /highlight >}}
+<!--ID: 1738283512865-->
+
 
 
 
@@ -1428,6 +1476,8 @@ while True:
 
 **Flag: SNI{very_weird_huhh???}**  
 **Rating [5/10]**  
+<!--ID: 1738283512866-->
+
 
 ## BLOCKCHAIN
 
@@ -1486,6 +1536,8 @@ set -x
 
 _x(){ local a="$1";shift;eval "$a=\"$*\""; }
 _y(){ eval "local $1"; }
+<!--ID: 1738283512867-->
+
 
 eval RPC_SRC="http://108.137.70.166:46716/747b1414-a3d6-4915-8006-7427dce3bc90"
 eval PRIV_K="Oxe9af35f7dc3e098295311cdac0462ec56bfa1a5986d51fac47167a5b1f6de9d9"
@@ -1509,6 +1561,8 @@ local ye_solved=$(cast call "$CNTR" "isSolved()" --rpc-url "$RPC_SRC" --private-
 
 **Flag: SNI{Introduction_To_Blockchain_Environment_a71fa51ca6}**  
 **Rating [6/10]**  
+<!--ID: 1738283512868-->
+
 
 ## DOCUMENTATION
 
