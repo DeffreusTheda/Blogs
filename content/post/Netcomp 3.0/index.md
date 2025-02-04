@@ -7,7 +7,7 @@ description: My SHS Team's First CTF
 categories:
   - Write-up
 tags:
-  - Institute
+  - sixnthesis
   - National
 ---
 
