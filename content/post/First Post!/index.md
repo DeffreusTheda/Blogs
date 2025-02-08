@@ -45,3 +45,6 @@ can't really play well enough.
 I'll just release the rev write-ups,
 maybe tomorrow??  
 Tune in :>
+
+Also, if you see posts prior to this one,  
+it just means that these content are written before this post :D
