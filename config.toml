@@ -27,7 +27,9 @@ favicon = "favicon.ico"
   # emoji = "；"
   # subtitle = "\"His heart was yours from the first moment that you met.\""
   # subtitle = I love you, not only for what you are, but for what I am when I am with you.
-  subtitle = "Let us live!!! Let us love!!! Let us share the deepest secrets of our souls!!! You first."
+  # subtitle = "Let us live!!! Let us love!!! Let us share the deepest secrets of our souls!!! You first."
+  # subtitle = "Even bytes get lonely for a little bit."
+  subtitle = "Don't get stuck in a closet -- wear yourself out."
 
     [params.sidebar.avatar]
     enabled = true
