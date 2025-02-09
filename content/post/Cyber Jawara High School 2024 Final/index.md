@@ -513,7 +513,7 @@ services:
 {{< /highlight >}}
 
 So, I guess we're privileged, hehe.
-You can delete the flag file though,
+You can't delete the flag file though,
 since it was set to read-only for all users (including root).
 
 Aight, now how about the jail itself?
