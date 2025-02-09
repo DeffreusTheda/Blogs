@@ -8,7 +8,7 @@ categories:
   - Write-up
 tags:
   - National
-  - High School
+  - SHS
   - Individual
 ---
 

@@ -5,8 +5,6 @@ date: 2025-01-21
 description: A stupid story about this blog launch
 categories:
   - Blog
-<!-- tags: -->
-  <!-- - First -->
 ---
 
 ## Recent things first...

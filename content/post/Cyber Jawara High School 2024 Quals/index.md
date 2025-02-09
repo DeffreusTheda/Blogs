@@ -9,7 +9,7 @@ tags:
   - N2L
   - LastSeenIn2026
   - National
-  - High School
+  - SHS
 ---
 
 ## Cyber Jawara High School 2024 Quals

