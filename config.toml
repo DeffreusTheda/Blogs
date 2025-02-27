@@ -180,3 +180,9 @@ enabled = true
     style = 'tokyonight-moon'
     tabWidth = 4
     wrapperClass = 'highlight'
+
+[params.vercel_analytics]
+enable = true
+
+[params.vercel_speed_insights]
+enable = true
