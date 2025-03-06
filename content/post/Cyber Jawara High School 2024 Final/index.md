@@ -421,7 +421,7 @@ int check(char* input) {
 It successfully identifies `X` as a 2D array.
 Immediately, I realize what Y actually for here.
 I can express it like: 
-$$\left( Y_{i} = \Sigma_{j = 0}^{43} f_{j} \times X_{i,j} \right) \forall i \in \\{0,1,...,43\\}$$
+$$\left( Y_{i} = \Sigma_{j = 0}^{43} f_{j} \times X_{j,i} \right) \forall i \in \\{0,1,...,43\\}$$
 I know you get what that means ;)  
 Like, do I need to explain it?
 The code should be enough.
@@ -726,3 +726,6 @@ ls alt
 
 What a lad.
 I gotta learn `openssl` for real duhh.
+
+**Flag: `CJ{8c05db2894cde846f4967bfa0274ad177d6e9f95b26d442c7046f8e7ea5c929f}`**  
+**Rating: [6/10]**
