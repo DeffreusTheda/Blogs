@@ -15,3 +15,6 @@ themes/*
 !themes/hugo-theme-stack/
 **/.DS_Store
 .vercel
+.env*.local
+notes/
+node_modules/**

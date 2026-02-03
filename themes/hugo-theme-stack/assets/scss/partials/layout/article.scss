@@ -326,6 +326,10 @@
             border: none;
             background: none;
             padding: 0;
+
+            span {
+                display: inline-block;
+            }
         }
     }
 
